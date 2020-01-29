@@ -76,7 +76,6 @@ describe('#check', () => {
       });
 
       it('should send proper check format for title, text, tags, and a callback', done => {
-        console.log('')
         let called = false;
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(opts, clientType);
