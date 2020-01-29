@@ -90,7 +90,7 @@ describe('#check', () => {
         });
       });
 
-      it('callback should receive error and bytes', done => {
+      it('should have callback that receives error and bytes', done => {
         let bytes_counted = false
         let error = false
 
