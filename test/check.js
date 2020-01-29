@@ -76,6 +76,7 @@ describe('#check', () => {
       });
 
       it('should send proper check format for title, text, tags, and a callback', done => {
+        console.log('')
         let called = false;
         server = createServer(serverType, opts => {
           statsd = createHotShotsClient(opts, clientType);
@@ -86,6 +87,24 @@ describe('#check', () => {
         server.on('metrics', event => {
           assert.equal(event, `_sc|check.name|0|#foo,bar${metricEnd}`);
           assert.equal(called, true);
+          done();
+        });
+      });
+
+      it('callback should receive error and bytes', done => {
+        let bytes_counted = false
+        let error = false
+
+        server = createServer(serverType, opts => {
+          statsd = createHotShotsClient(opts, clientType);
+          statsd.check('check.name', statsd.CHECKS.OK, null, ['foo', 'bar'], (err, bytes) => {
+            bytes_counted = bytes !== undefined || bytes !== 0
+            error = err
+          });
+        });
+        server.on('metrics', event => {
+          assert.equal(event, `_sc|check.name|0|#foo,bar${metricEnd}`);
+          assert.equal(bytes_counted || error, true);
           done();
         });
       });
